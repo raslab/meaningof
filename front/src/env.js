@@ -1,5 +1,5 @@
-const config = {
-    apiUrl: 'http://localhost:2277/'
+const env = {
+    API_URL: 'http://localhost:2020/api'
 }
 
-export default config;
+export default env;

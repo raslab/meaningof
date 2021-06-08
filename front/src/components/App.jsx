@@ -3,6 +3,7 @@ import { Container } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import AddPost from './AddPost';
+import GrabUserData from './GrabUserData';
 import Header from './Header';
 import Login from './Login';
 import Search from './Search';
@@ -38,6 +39,10 @@ export default function App() {
                         }
                     />
 
+                    <Route
+                        path="/login/success"
+                        children={<GrabUserData />}
+                    />
                     <Route
                         path="/login/:service"
                         children={<Login />}

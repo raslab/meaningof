@@ -1,11 +1,24 @@
 import React from 'react'
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
+import store from '../store/store';
+import { loadMyUser, logout } from '../store/userSlice';
 
 export default function Header() {
     const isLogined = useSelector(state => state.user.logined)
     const userName = useSelector(state => state.user.userName)
+    const history = useHistory()
+
+    if (!isLogined) {
+        store.dispatch(loadMyUser())
+    }
+
+    function makeLogout() {
+        store.dispatch(logout())
+            .then(() => { history.push('/login') })
+    }
 
     return (
         <Container>
@@ -26,12 +39,12 @@ export default function Header() {
                         <NavDropdown title={userName ? userName : "User"} alignRight id="navbarScrollingDropdown">
                             {isLogined && <LinkContainer to='/user'><NavDropdown.Item>{userName}</NavDropdown.Item></LinkContainer>}
                             {!isLogined && <LinkContainer to="/login"><NavDropdown.Item>Login</NavDropdown.Item></LinkContainer>}
-                            {isLogined && <LinkContainer to="/logout"><NavDropdown.Item>Logout</NavDropdown.Item></LinkContainer>}
+                            {isLogined && <NavDropdown.Item onClick={() => { makeLogout() }}>Logout</NavDropdown.Item>}
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
 
-        </Container>
+        </Container >
     );
 }

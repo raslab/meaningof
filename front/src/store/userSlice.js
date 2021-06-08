@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import env from '../env'
 
 export const userSlice = createSlice({
     name: 'user',
@@ -10,13 +11,20 @@ export const userSlice = createSlice({
     reducers: {
         onLogin: (state, action) => {
             return {
-                userId: action.payload.userId,
-                userName: action.payload.userName,
+                ...state,
+                ...action.payload,
                 logined: true
             }
         },
-        logout: (state) => {
+        setUpdating: (state, action) => {
             return {
+                ...state,
+                updating: action.payload.updating
+            }
+        },
+        onLogout: (state) => {
+            return {
+                ...state,
                 userId: null,
                 userName: null,
                 logined: false
@@ -25,17 +33,55 @@ export const userSlice = createSlice({
     },
 })
 
-export function loginTo(service) {
+export function loadMyUser() {
     return async function (dispatch, getState) {
-        await new Promise(resolve => setTimeout(resolve, 300))
-        dispatch(onLogin({
-            userId: '12345',
-            userName: 'temp user'
-        }))
-        console.log(getState())
+        if (getState().user.updating === true) {
+            return
+        }
+        dispatch(setUpdating({ updating: true }))
+        const init = {
+            method: 'GET',
+            cache: 'default',
+            credentials: 'include'
+        };
+        await fetch(env.API_URL + '/user', init)
+            .then((response) => {
+                return response.json();
+            })
+            .then(json => {
+                if (json.status === 200)
+                    dispatch(onLogin(json.user))
+            })
+            .then(() => {
+                dispatch(setUpdating({ updating: false }))
+            });
     }
 }
 
-export const { onLogin, logout } = userSlice.actions
+export function logout() {
+    return async function (dispatch, getState) {
+        console.log(getState())
+        if (getState().user.updating === true) {
+            return
+        }
+        dispatch(setUpdating({ updating: true }))
+        const init = {
+            method: 'GET',
+            cache: 'default',
+            credentials: 'include'
+        };
+        await fetch(env.API_URL + '/user/logout', init)
+            .then((response) => {
+                console.log(response)
+                if (response.status === 200)
+                    dispatch(onLogout())
+            })
+            .then(() => {
+                dispatch(setUpdating({ updating: false }))
+            });
+    }
+}
+
+export const { onLogin, onLogout, setUpdating } = userSlice.actions
 
 export default userSlice.reducer

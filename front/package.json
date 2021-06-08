@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.1.10",
     "bootstrap": "4.6.0",
     "jquery": "^3.6.0",
+    "js-cookie": "^2.2.1",
     "popper.js": "^1.16.1",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.0",
@@ -27,7 +28,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "xireact-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -45,6 +46,11 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "react-dotenv": {
+    "whitelist": [
+      "API_URL"
     ]
   }
 }
