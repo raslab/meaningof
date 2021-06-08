@@ -7,9 +7,11 @@ import store from '../store/store';
 import { loadMyUser, logout } from '../store/userSlice';
 
 export default function Header() {
-    const isLogined = useSelector(state => state.user.logined)
-    const userName = useSelector(state => state.user.userName)
+    const user = useSelector(state => state.user)
     const history = useHistory()
+
+    const isLogined = user.logined
+    const userName = user.userName
 
     if (!isLogined) {
         store.dispatch(loadMyUser())
@@ -36,7 +38,8 @@ export default function Header() {
 
                 <Navbar.Collapse className="justify-content-end" id="navbarScroll">
                     <Nav>
-                        <NavDropdown title={userName ? userName : "User"} alignRight id="navbarScrollingDropdown">
+                        {isLogined && user.isAdmin && <div className="nav-link text-success">(admin)</div>}
+                        <NavDropdown title={userName ? userName : "User"} alignRight id="navbarScrollingDropdown" >
                             {isLogined && <LinkContainer to='/user'><NavDropdown.Item>{userName}</NavDropdown.Item></LinkContainer>}
                             {!isLogined && <LinkContainer to="/login"><NavDropdown.Item>Login</NavDropdown.Item></LinkContainer>}
                             {isLogined && <NavDropdown.Item onClick={() => { makeLogout() }}>Logout</NavDropdown.Item>}

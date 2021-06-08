@@ -101,15 +101,19 @@ class AppAuth {
 
 
         this.app.get('/api/user', checkAuth, (req, res) => {
+            let user = {
+                userId: req.user._id,
+                userName: req.user.userName,
+                userIcon: req.user.userPicture
+            }
+            if (req.user.isAdmin) {
+                user.isAdmin = true
+            }
             res
                 .status(200)
                 .json({
                     status: 200,
-                    user: {
-                        userId: req.user._id,
-                        userName: req.user.userName,
-                        userIcon: req.user.userPicture
-                    }
+                    user: user
                 })
         })
     }

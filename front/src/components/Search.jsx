@@ -1,6 +1,7 @@
 import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import { deletePost } from '../store/postsSlice';
 import { loadLatest, startSearch } from '../store/searchSlice';
 import store from '../store/store';
 import SearchBar from './SearchBar'
@@ -10,6 +11,7 @@ export default function Search() {
     const searchQuery = useSelector(state => state.search.searchQuery)
     const results = useSelector(state => state.search.results)
     const isLoading = useSelector(state => state.search.isLoading)
+    const isAdmin = useSelector(state => state.user.isAdmin)
 
     if ((!results || results.length === 0) && !isLoading) {
         store.dispatch(loadLatest())
@@ -37,6 +39,7 @@ export default function Search() {
                             <UserPost
                                 {...p}
                                 key={p.id}
+                                onDeleteClick={isAdmin ? () => { store.dispatch(deletePost(p.id)) } : false}
                             />
                         )}
                     </Col>

@@ -8,9 +8,11 @@ export const postsSlice = createSlice({
     },
     reducers: {
         postsLoaded: (state, action) => {
+            let allPosts = [...state.posts, ...action.payload.posts]
+            allPosts = [...new Map(allPosts.map(item => [item['id'], item])).values()];
             return {
                 ...state,
-                posts: [...state.posts, ...action.payload.posts]
+                posts: allPosts
             }
         },
         onPostDeleted: (state, action) => {

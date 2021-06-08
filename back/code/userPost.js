@@ -1,4 +1,3 @@
-const userPost = require('./userPostModel')
 const express = require('express');
 const UserPost = require('./userPostModel');
 const checkAuth = require('./authCheck');
@@ -87,7 +86,7 @@ const registerUserPostsApi = function (app) {
                 res
                     .status(502)
                     .json({ status: 502, message: err })
-            } else if (post.publisher !== req.user.id) {
+            } else if (post.publisher !== req.user.id && !req.user.isAdmin) {
                 res
                     .status(403)
                     .json({ status: 403, message: 'Only post author can delete post!' })
