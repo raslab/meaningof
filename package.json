@@ -22,5 +22,8 @@
   },
   "dependencies": {
     "back": "file:back"
+  },
+  "scripts" : {
+    "heroku-postbuild": "bash heroku-deploy.sh"
   }
 }
