@@ -5,8 +5,10 @@ npm install
 cd ..
 
 cd front
-yarn install
-sed -i 's/http:\/\/localhost:2020\/api/https:\/\/meaning-of-web.herokuapp.com/\/api/g' ./src/config.js
-yarn build
+npm install
+
+rm ./src/config.js
+mv ./src/config.js_prod ./src/config.js
+npm run build
 rm -rf ../back/public
 mv build ../back/public

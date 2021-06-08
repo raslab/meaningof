@@ -1,0 +1,5 @@
+const env = {
+    API_URL: 'https://meaning-of-web.herokuapp.com/api'
+}
+
+export default env;
