@@ -1,0 +1,26 @@
+{
+  "name": "meaningof",
+  "version": "1.0.0",
+  "description": "Public notes collector",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raslab/meaningof.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raslab/meaningof/issues"
+  },
+  "homepage": "https://github.com/raslab/meaningof#readme",
+  "engines": {
+    "node": "14.17.0"
+  },
+  "dependencies": {
+    "back": "file:back"
+  }
+}
