@@ -13,10 +13,6 @@ export default function Header() {
     const isLogined = user.logined
     const userName = user.userName
 
-    if (!isLogined) {
-        store.dispatch(loadMyUser())
-    }
-
     function makeLogout() {
         store.dispatch(logout())
             .then(() => { history.push('/login') })
