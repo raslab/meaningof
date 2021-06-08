@@ -4,6 +4,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy
 const FacebookStrategy = require('passport-facebook').Strategy
 const createSessionStorage = require('./sessionStorage')
 const User = require('./authUserModel')
+const checkAuth = require('./authCheck');
 
 class AppAuth {
 
@@ -93,24 +94,23 @@ class AppAuth {
 
         this.app.get('/api/user/logout', (req, res) => {
             req.logout();
-            res.send({ status: 200 });
+            res
+                .status(200)
+                .send({ status: 200 });
         })
 
 
-        this.app.get('/api/user', (req, res) => {
-            const data = {}
-            if (req.isAuthenticated()) {
-                data.status = 200,
-                    data.user = {
+        this.app.get('/api/user', checkAuth, (req, res) => {
+            res
+                .status(200)
+                .json({
+                    status: 200,
+                    user: {
                         userId: req.user._id,
                         userName: req.user.userName,
                         userIcon: req.user.userPicture
                     }
-            }
-            else {
-                data.status = 401
-            }
-            res.send(JSON.stringify(data));
+                })
         })
     }
 
@@ -123,4 +123,3 @@ class AppAuth {
 }
 
 module.exports = AppAuth
-process.env.MONGO_CONNECTION_STRING

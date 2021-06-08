@@ -9,7 +9,14 @@ export const postsSlice = createSlice({
     reducers: {
         postsLoaded: (state, action) => {
             return {
+                ...state,
                 posts: [...state.posts, ...action.payload.posts]
+            }
+        },
+        onPostDeleted: (state, action) => {
+            return {
+                ...state,
+                posts: state.posts.filter(p => p.id !== action.payload.postId)
             }
         }
     },
@@ -17,7 +24,6 @@ export const postsSlice = createSlice({
 
 export function loadMyPosts() {
     return async function (dispatch, getState) {
-        console.log('get');
         const init = {
             method: 'GET',
             cache: 'no-cache',
@@ -26,27 +32,10 @@ export function loadMyPosts() {
         await fetch(config.API_URL + '/userPost', init)
             .then(response => response.json())
             .then(json => {
-                console.log(json);
                 dispatch(postsLoaded(json))
             });
     }
 
-}
-
-export function loadUserPosts(userId) {
-    return async function (dispatch, getState) {
-        const init = {
-            method: 'GET',
-            cache: 'no-cache',
-            credentials: 'include'
-        };
-        await fetch(config.API_URL + '/userPost/' + userId, init)
-            .then(response => response.json())
-            .then(json => {
-                console.log(json);
-                dispatch(postsLoaded(json))
-            });
-    }
 }
 
 export function addMyPost(post) {
@@ -66,12 +55,26 @@ export function addMyPost(post) {
         await fetch(config.API_URL + '/userPost', init)
             .then(response => response.json())
             .then(json => {
-                console.log(json);
                 dispatch(postsLoaded(json))
             });
     }
 }
 
-export const { postsLoaded } = postsSlice.actions
+export function deletePost(postId) {
+    return async function (dispatch, getState) {
+        const init = {
+            method: 'DELETE',
+            cache: 'no-cache',
+            credentials: 'include'
+        };
+        await fetch(config.API_URL + '/userPost/' + postId, init)
+            .then(response => response.json())
+            .then(json => {
+                dispatch(onPostDeleted({ postId: postId }))
+            });
+    }
+}
+
+export const { postsLoaded, onPostDeleted } = postsSlice.actions
 
 export default postsSlice.reducer

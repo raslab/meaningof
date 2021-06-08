@@ -1,6 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
+import { deletePost } from '../store/postsSlice';
 import UserPost from './UserPost';
+import store from '../store/store';
 
 export default function User() {
     const userName = useSelector(state => state.user.userName)
@@ -18,6 +20,7 @@ export default function User() {
                 <UserPost
                     {...p}
                     key={p.id}
+                    onDeleteClick={() => { store.dispatch(deletePost(p.id)) }}
                 />
             )}
         </>
