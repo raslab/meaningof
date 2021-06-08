@@ -1,11 +1,11 @@
 import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
-import env from '../env'
+import config from '../config'
 
 export default function Login() {
     function redirectTo(servise) {
-        window.location.href = env.API_URL + "/auth/" + servise
+        window.location.href = config.API_URL + "/auth/" + servise
     }
 
     return (

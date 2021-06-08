@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import config from '../config'
 
 export const postsSlice = createSlice({
     name: 'posts',
@@ -16,34 +17,58 @@ export const postsSlice = createSlice({
 
 export function loadMyPosts() {
     return async function (dispatch, getState) {
-        await new Promise(resolve => setTimeout(resolve, 300))
-        dispatch(postsLoaded({
-            posts: [{
-                id: getState.posts.posts.length + 1,
-                publisher: '1234',
-                date: new Date().toLocaleDateString(),
-                title: 'my meaning',
-                content: 'some explanation'
-            }
-            ]
-        }))
+        console.log('get');
+        const init = {
+            method: 'GET',
+            cache: 'no-cache',
+            credentials: 'include'
+        };
+        await fetch(config.API_URL + '/userPost', init)
+            .then(response => response.json())
+            .then(json => {
+                console.log(json);
+                dispatch(postsLoaded(json))
+            });
+    }
+
+}
+
+export function loadUserPosts(userId) {
+    return async function (dispatch, getState) {
+        const init = {
+            method: 'GET',
+            cache: 'no-cache',
+            credentials: 'include'
+        };
+        await fetch(config.API_URL + '/userPost/' + userId, init)
+            .then(response => response.json())
+            .then(json => {
+                console.log(json);
+                dispatch(postsLoaded(json))
+            });
     }
 }
 
 export function addMyPost(post) {
     return async function (dispatch, getState) {
-        await new Promise(resolve => setTimeout(resolve, 300))
-        const state = getState()
-        if (!state.user.logined) return
-        dispatch(postsLoaded({
-            posts: [{
-                id: state.posts.posts.length + 1,
-                publisher: state.user.userId,
-                date: new Date().toLocaleDateString(),
+        const init = {
+            method: 'POST',
+            cache: 'no-cache',
+            credentials: 'include',
+            body: JSON.stringify({
                 title: post.title,
                 content: post.content
-            }]
-        }))
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        await fetch(config.API_URL + '/userPost', init)
+            .then(response => response.json())
+            .then(json => {
+                console.log(json);
+                dispatch(postsLoaded(json))
+            });
     }
 }
 

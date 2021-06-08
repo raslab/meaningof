@@ -7,7 +7,7 @@ export default function UserPost(param) {
             <Card.Header>{param.title}</Card.Header>
             <Card.Body>
                 <Card.Text>{param.content}</Card.Text>
-                {!param.simple && <small className="text-muted text-right d-block">{param.date}</small>}
+                {param.publishTime && <small className="text-muted text-right d-block">{new Date(param.publishTime).toLocaleString()}</small>}
             </Card.Body>
         </Card>
     );

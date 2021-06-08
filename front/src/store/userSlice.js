@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import env from '../env'
+import config from '../config'
+import { loadMyPosts } from './postsSlice'
 
 export const userSlice = createSlice({
     name: 'user',
@@ -41,17 +42,18 @@ export function loadMyUser() {
         dispatch(setUpdating({ updating: true }))
         const init = {
             method: 'GET',
-            cache: 'default',
+            cache: 'no-cache',
             credentials: 'include'
         };
-        await fetch(env.API_URL + '/user', init)
+        await fetch(config.API_URL + '/user', init)
             .then((response) => {
                 return response.json();
             })
             .then(json => {
-                console.log(json)
-                if (json.status === 200)
+                if (json.status === 200) {
                     dispatch(onLogin(json.user))
+                    dispatch(loadMyPosts())
+                }
             })
             .then(() => {
                 dispatch(setUpdating({ updating: false }))
@@ -61,19 +63,17 @@ export function loadMyUser() {
 
 export function logout() {
     return async function (dispatch, getState) {
-        console.log(getState())
         if (getState().user.updating === true) {
             return
         }
         dispatch(setUpdating({ updating: true }))
         const init = {
             method: 'GET',
-            cache: 'default',
+            cache: 'no-cache',
             credentials: 'include'
         };
-        await fetch(env.API_URL + '/user/logout', init)
+        await fetch(config.API_URL + '/user/logout', init)
             .then((response) => {
-                console.log(response)
                 if (response.status === 200)
                     dispatch(onLogout())
             })
