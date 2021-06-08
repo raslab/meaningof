@@ -1,11 +1,9 @@
 const passport = require('passport')
-const mongoose = require('./mongoose-session');
-const findOrCreate = require('mongoose-findorcreate');
 const session = require('express-session');
-const passportLocalMongoose = require('passport-local-mongoose');
-var GoogleStrategy = require('passport-google-oauth20').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
-const MongoStore = require('connect-mongo');
+const GoogleStrategy = require('passport-google-oauth20').Strategy
+const FacebookStrategy = require('passport-facebook').Strategy
+const createSessionStorage = require('./sessionStorage')
+const User = require('./authUserModel')
 
 class AppAuth {
 
@@ -19,25 +17,11 @@ class AppAuth {
             resave: false,
             saveUninitialized: false,
             cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
-            store: MongoStore.create({
-                mongoUrl: process.env.MONGO_CONNECTION_STRING,
-                autoRemove: 'interval',
-                autoRemoveInterval: 60
-            })
+            store: createSessionStorage()
         }));
         this.app.use(passport.initialize());
         this.app.use(passport.session())
 
-        var userSchema = new mongoose.Schema({
-            googleId: String,
-            facebookId: String,
-            userName: String,
-            userPicture: String
-        });
-        userSchema.plugin(passportLocalMongoose);
-        userSchema.plugin(findOrCreate);
-
-        const User = new mongoose.model('User', userSchema);
         passport.use(User.createStrategy());
         passport.serializeUser(function (user, done) {
             done(null, user.id);
@@ -48,11 +32,9 @@ class AppAuth {
                 done(err, user);
             });
         });
-        this.User = User
     }
 
     #initGoogleAuth = function () {
-        const User = this.User
         passport.use(new GoogleStrategy({
             clientID: process.env.AUTH_GOOGLE_CLIENT_ID,
             clientSecret: process.env.AUTH_GOOGLE_SECRET,
@@ -81,7 +63,6 @@ class AppAuth {
     }
 
     #initFacebookAuth = function () {
-        const User = this.User
         passport.use(new FacebookStrategy({
             clientID: process.env.AUTH_FACEBOOK_APP_ID,
             clientSecret: process.env.AUTH_FACEBOOK_SECRET,
@@ -117,7 +98,6 @@ class AppAuth {
 
 
         this.app.get('/api/user', (req, res) => {
-            console.log(req.headers)
             const data = {}
             if (req.isAuthenticated()) {
                 data.status = 200,
