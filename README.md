@@ -7,5 +7,5 @@ Public notes collector
 - Search for all notes in project's database
 
 ## Tech stack
-- Backend: nodejs, express, mongoose, passport.js + google/fb auth2.0, session + connetn-mongo 
+- Backend: nodejs, express, mongoose, passport.js + google/fb auth2.0, session + connect-mongo 
 - Frontend: react, redux, react-bootstrap
