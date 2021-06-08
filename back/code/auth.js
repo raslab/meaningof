@@ -1,11 +1,11 @@
 const passport = require('passport')
-const mongoose = require('mongoose');
+const mongoose = require('./mongoose-session');
 const findOrCreate = require('mongoose-findorcreate');
 const session = require('express-session');
 const passportLocalMongoose = require('passport-local-mongoose');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
-
+const MongoStore = require('connect-mongo');
 
 class AppAuth {
 
@@ -18,12 +18,15 @@ class AppAuth {
             secret: process.env.SESSION_SECRET,
             resave: false,
             saveUninitialized: false,
-            cookie: { maxAge: 3600000 }
+            cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
+            store: MongoStore.create({
+                mongoUrl: process.env.MONGO_CONNECTION_STRING,
+                autoRemove: 'interval',
+                autoRemoveInterval: 60
+            })
         }));
         this.app.use(passport.initialize());
         this.app.use(passport.session())
-
-        mongoose.connect(process.env.MONGO_CONNECTION_STRING, { useUnifiedTopology: true, useNewUrlParser: true });
 
         var userSchema = new mongoose.Schema({
             googleId: String,
@@ -73,7 +76,7 @@ class AppAuth {
         this.app.get('/api/auth/google/callback',
             passport.authenticate('google', { failureRedirect: '/login' }),
             function (req, res) {
-                res.redirect(process.env.FRONT_HOST + '/login/success');
+                res.redirect('/login/success');
             });
     }
 
@@ -101,7 +104,7 @@ class AppAuth {
         this.app.get('/api/auth/facebook/callback',
             passport.authenticate('facebook', { failureRedirect: '/login' }),
             function (req, res) {
-                res.redirect(process.env.FRONT_HOST + '/login/success');
+                res.redirect('/login/success');
             });
     }
 
@@ -114,6 +117,7 @@ class AppAuth {
 
 
         this.app.get('/api/user', (req, res) => {
+            console.log(req.headers)
             const data = {}
             if (req.isAuthenticated()) {
                 data.status = 200,

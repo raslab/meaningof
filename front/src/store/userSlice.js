@@ -49,6 +49,7 @@ export function loadMyUser() {
                 return response.json();
             })
             .then(json => {
+                console.log(json)
                 if (json.status === 200)
                     dispatch(onLogin(json.user))
             })
