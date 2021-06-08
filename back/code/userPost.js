@@ -1,9 +1,7 @@
-const express = require('express');
 const UserPost = require('./userPostModel');
 const checkAuth = require('./authCheck');
 
 const registerUserPostsApi = function (app) {
-    app.use(express.json({ type: 'application/json' }));
 
     app.post('/api/userPost', checkAuth, (req, res) => {
         const json = req.body;

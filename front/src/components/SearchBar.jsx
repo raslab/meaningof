@@ -23,7 +23,7 @@ export default function SearchBar(params) {
                                 <InputGroup.Text id="main-search"><BiSearchAlt2 /></InputGroup.Text>
                             </InputGroup.Prepend>
                             <FormControl
-                                placeholder="Search meanings of life"
+                                placeholder="Search meanings of..."
                                 aria-label="searchQuery"
                                 aria-describedby="main-search"
                                 onChange={HandleSearchClick}

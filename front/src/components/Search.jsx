@@ -13,7 +13,7 @@ export default function Search() {
     const isLoading = useSelector(state => state.search.isLoading)
     const isAdmin = useSelector(state => state.user.isAdmin)
 
-    if ((!results || results.length === 0) && !isLoading) {
+    if ((!results || results.length === 0) && !isLoading && !searchQuery) {
         store.dispatch(loadLatest())
     }
 
@@ -32,14 +32,14 @@ export default function Search() {
                         {
                             isLoading
                                 ? <p>Loading...</p>
-                                : (searchQuery && <p>Results for search '{searchQuery}':</p>)
+                                : (searchQuery && <p>{results.length} results for search '{searchQuery}':</p>)
                         }
 
                         {results && results.map(p =>
                             <UserPost
                                 {...p}
                                 key={p.id}
-                                onDeleteClick={isAdmin ? () => { store.dispatch(deletePost(p.id)) } : false}
+                                onDeleteClick={isAdmin ? () => { store.dispatch(deletePost(p.id)).then(() => { changeSearch(searchQuery) }) } : false}
                             />
                         )}
                     </Col>

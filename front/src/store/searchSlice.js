@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import config from '../config'
 
 export const searchSlice = createSlice({
     name: 'search',
@@ -28,32 +29,38 @@ export const searchSlice = createSlice({
 
 export function loadLatest() {
     return async function (dispatch, getState) {
-        await new Promise(resolve => setTimeout(resolve, 300))
-        const pp = getState().posts?.posts
-        if (pp) {
-            dispatch(onLoaded({
-                searchQuery: 'latest',
-                results: pp.slice(0, 10)
-            }))
+        const init = {
+            method: 'GET',
+            cache: 'no-cache',
+            credentials: 'include'
         }
-
+        await fetch(config.API_URL + '/latest', init)
+            .then(response => response.json())
+            .then(json => {
+                dispatch(onLoaded({ searchQuery: 'latest tag', results: json.posts }))
+            });
     }
 }
 
 export function startSearch(query) {
+    if (!query) {
+        return loadLatest()
+    } else if (query.length < 3) {
+        return () => { }
+    }
+
     return async function (dispatch, getState) {
-        dispatch(startLoading({ searchQuery: query }))
-        await new Promise(resolve => setTimeout(resolve, 300))
-        const q = query.toLowerCase()
-        const pp = getState().posts?.posts
-        if (!pp || !q) {
+        const init = {
+            method: 'GET',
+            cache: 'no-cache',
+            credentials: 'include'
         }
-        else {
-            dispatch(onLoaded({
-                searchQuery: query,
-                results: pp.filter(p => p.title.toLowerCase().indexOf(q) > -1)
-            }))
-        }
+        const url = new URL(config.API_URL + '/search?') + new URLSearchParams({ q: query })
+        await fetch(url, init)
+            .then(response => response.json())
+            .then(json => {
+                dispatch(onLoaded({ searchQuery: query, results: json.posts }))
+            });
     }
 }
 

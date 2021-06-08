@@ -37,7 +37,6 @@ export function loadMyPosts() {
                 dispatch(postsLoaded(json))
             });
     }
-
 }
 
 export function addMyPost(post) {

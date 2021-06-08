@@ -16,6 +16,7 @@ export default function User() {
             <br />
             <p>Published posts: {posts.length}</p>
             <p>Posts:</p>
+            {(!posts || posts.length < 1) && <p>There are no published posts</p>}
             {posts.map(p =>
                 <UserPost
                     {...p}
