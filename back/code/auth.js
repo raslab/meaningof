@@ -39,7 +39,7 @@ class AppAuth {
         passport.use(new GoogleStrategy({
             clientID: process.env.AUTH_GOOGLE_CLIENT_ID,
             clientSecret: process.env.AUTH_GOOGLE_SECRET,
-            callbackURL: '/api/auth/google/callback'
+            callbackURL: process.env.API_HOST + '/api/auth/google/callback'
         },
             function (accessToken, refreshToken, profile, cb) {
                 User.findOrCreate(
@@ -67,7 +67,7 @@ class AppAuth {
         passport.use(new FacebookStrategy({
             clientID: process.env.AUTH_FACEBOOK_APP_ID,
             clientSecret: process.env.AUTH_FACEBOOK_SECRET,
-            callbackURL: '/api/auth/facebook/callback'
+            callbackURL: process.env.API_HOST + '/api/auth/facebook/callback'
         },
             function (accessToken, refreshToken, profile, cb) {
                 User.findOrCreate(
