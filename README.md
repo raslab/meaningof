@@ -1,5 +1,6 @@
 # MeaningOf
 Public notes collector
+URL: https://meaning-of-web.herokuapp.com/
 
 # Features:
 - Login via Google/Facebook
