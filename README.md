@@ -1,5 +1,7 @@
 # MeaningOf
-Public notes collector
+
+Public notes collector. You can add any note from your accoutn to share it with anyone else.
+
 URL: https://meaning-of-web.herokuapp.com/
 
 # Features:
